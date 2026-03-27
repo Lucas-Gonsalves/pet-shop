@@ -14,6 +14,11 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    'node_modules/**',
+    '.prettierrc',
+    '.yml',
+    '.md',
+    '.env',
   ]),
   prettier,
   {
@@ -23,8 +28,6 @@ const eslintConfig = defineConfig([
     rules: {
       // normal rules
       semi: ['warn', 'never'], // Disallow semicolons at the end of statements
-
-      quotes: ['warn', 'single'], // Enforce the use of single quotes for strings
 
       indent: ['warn', 2], // Enforce consistent indentation of 2 spaces
 
