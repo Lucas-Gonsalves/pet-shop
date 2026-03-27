@@ -30,8 +30,6 @@ const eslintConfig = defineConfig([
 
       'comma-dangle': ['warn', 'always-multiline'], // Require trailing commas in multiline objects, arrays, etc.
 
-      'max-len': ['warn', { code: 120 }], // Warn when a line exceeds 80 characters
-
       'object-curly-spacing': ['warn', 'always'], // Require spaces inside curly braces (e.g., { foo: "bar" })
 
       'arrow-parens': ['warn', 'always'], // Require parentheses around arrow function parameters
