@@ -22,6 +22,23 @@ export const PeriodSection = ({ period }: PeriodSection) => {
         </div>
         <span className="text-label-large-size text-content-secondary">{period.timeRange}</span>
       </div>
+
+      {period.appointments.length > 0 ? (
+        <div className="px-5">
+          <div>
+            <div className="text-label-small-size text-content-secondary mb-2 grid grid-cols-2 md:hidden">
+              <div className="text-left">Time</div>
+              <div className="text-right">Patient</div>
+            </div>
+
+            {period.appointments.map((appointment, index) => (
+              <div key={index}>{appointment.petName}</div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p>None schedule for this period</p>
+      )}
     </section>
   )
 }
