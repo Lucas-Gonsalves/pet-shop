@@ -1,0 +1,27 @@
+import { CloudIcon, MoonIcon, SunIcon } from 'lucide-react'
+
+import { AppointmentPeriod } from '@/@types/appointments'
+
+type PeriodSection = {
+  period: AppointmentPeriod
+}
+
+const periodIcons = {
+  morning: <SunIcon className="text-accent-blue" />,
+  afternoon: <CloudIcon className="text-accent-orange" />,
+  evening: <MoonIcon className="text-accent-yellow" />,
+}
+
+export const PeriodSection = ({ period }: PeriodSection) => {
+  return (
+    <section className="bg-background-tertiary mb-8 rounded-xl">
+      <div className="flex items-center justify-between border-b border-[#2E2C30] px-5 py-3">
+        <div className="flex items-center gap-8">
+          {periodIcons[period?.type]}
+          <h2 className="text-label-large-size text-content-primary">{period?.title}</h2>
+        </div>
+        <span className="text-label-large-size text-content-secondary">{period.timeRange}</span>
+      </div>
+    </section>
+  )
+}
