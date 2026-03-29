@@ -2,6 +2,8 @@ import { CloudIcon, MoonIcon, SunIcon } from 'lucide-react'
 
 import { AppointmentPeriod } from '@/@types/appointments'
 
+import { AppointmentCard } from '../appointment-card'
+
 type PeriodSection = {
   period: AppointmentPeriod
 }
@@ -32,7 +34,7 @@ export const PeriodSection = ({ period }: PeriodSection) => {
             </div>
 
             {period.appointments.map((appointment, index) => (
-              <div key={index}>{appointment.petName}</div>
+              <AppointmentCard key={index} appointment={appointment}></AppointmentCard>
             ))}
           </div>
         </div>
