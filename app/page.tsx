@@ -1,9 +1,8 @@
 import { PeriodSection } from '@/components/period-section'
-import { appointments } from '@/utils/fake-data/appointments'
-import { groupAppointmentByPeriod } from '@/utils/functions/group-appointment-by-period'
+import { APPOINTMENTS_DATA, groupAppointmentByPeriod } from '@/utils'
 
 export default function Home() {
-  const periods = groupAppointmentByPeriod(appointments)
+  const periods = groupAppointmentByPeriod(APPOINTMENTS_DATA)
 
   return (
     <div className="bg-background-primary p-6">
