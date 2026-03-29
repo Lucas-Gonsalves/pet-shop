@@ -30,12 +30,11 @@ export const AppointmentCard = ({ appointment, isFirstInSection }: AppointmentCa
             {appointment.tutorName}
           </span>
         </div>
-
-        <div className="col-span-2 flex items-center justify-end gap-2 pr-4 text-left md:col-span-1 md:mt-0">
-          <span className="text-paragraph-small-size text-content-secondary">
-            {appointment.description}
-          </span>
-        </div>
+      </div>
+      <div className="col-span-2 mt-1 hidden pr-4 text-left md:col-span-1 md:mt-0 md:block">
+        <span className="text-paragraph-small-size text-content-secondary">
+          {appointment.description}
+        </span>
       </div>
     </div>
   )

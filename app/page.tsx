@@ -1,12 +1,16 @@
 import { PeriodSection } from '@/components/period-section'
+// import prisma from '@/lib/prisma'
 import { APPOINTMENTS_DATA, groupAppointmentByPeriod } from '@/utils'
 
-export default function Home() {
+export default async function Home() {
+  // const appointments = await prisma.appointment.findMany()
+  // console.log(appointments)
+
   const periods = groupAppointmentByPeriod(APPOINTMENTS_DATA)
 
   return (
     <div className="bg-background-primary p-6">
-      <div className="flex items-center justify-between md:m-8">
+      <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-title-size text-content-primary mb-2">Your schedule</h1>
           <p className="text-paragraph-medium-size text-content-secondary">
