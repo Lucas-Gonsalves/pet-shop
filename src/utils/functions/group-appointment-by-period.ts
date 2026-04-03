@@ -1,5 +1,5 @@
 import { Appointment, AppointmentPeriod, AppointmentPeriodDay } from '@/@types/appointments'
-import { Appointment as AppointmentPrisma } from '@/app/generated/prisma/client'
+import { Appointment as AppointmentPrisma } from '@/generated/prisma/client'
 
 const getPeriod = (hour: number): AppointmentPeriodDay => {
   if (hour >= 9 && hour < 12) return 'morning'

@@ -48,3 +48,5 @@ next-env.d.ts
 generated/
 
 /app/generated/prisma
+
+/app/generated/prisma
