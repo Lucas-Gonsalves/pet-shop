@@ -1,12 +1,16 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DogIcon, PhoneIcon, UserIcon } from 'lucide-react'
+import { format, startOfToday } from 'date-fns'
+import { CalendarIcon, ChevronDownIcon, DogIcon, PhoneIcon, UserIcon } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
 import { IMaskInput } from 'react-imask'
 import { z } from 'zod'
 
+import { cn } from '@/lib/utils'
+
 import { Button } from '../ui/button'
+import { Calendar } from '../ui/calendar'
 import {
   Dialog,
   DialogContent,
@@ -17,6 +21,7 @@ import {
 } from '../ui/dialog'
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field'
 import { Input } from '../ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Textarea } from '../ui/textarea'
 
 const appointmentFormSchema = z.object({
@@ -24,6 +29,13 @@ const appointmentFormSchema = z.object({
   petName: z.string().min(3, 'Pet name is required'),
   phone: z.string().min(11, 'Phone is required'),
   description: z.string().min(3, 'Description is required'),
+  scheduleAt: z
+    .date({
+      error: 'Date is required',
+    })
+    .min(startOfToday(), {
+      message: 'Date cannot be in pass',
+    }),
 })
 
 type AppointmentFormValues = z.infer<typeof appointmentFormSchema>
@@ -36,6 +48,7 @@ export const AppointmentForm = () => {
       petName: '',
       phone: '',
       description: '',
+      scheduleAt: undefined,
     },
   })
 
@@ -170,6 +183,51 @@ export const AppointmentForm = () => {
                     autoComplete="off"
                     className="resize-none"
                   />
+
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              name="scheduleAt"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="flex flex-col">
+                  <FieldLabel
+                    htmlFor="form-appointment-scheduleAt"
+                    className="text-label-medium-size text-content-primary"
+                  >
+                    Date
+                  </FieldLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          'bg-background-tertiary border-border-primary text-content-primary hover:bg-background-tertiary hover:border-border-secondary hover:text-content-primary focus-visible:ring-border-brand focus:border-border-brand focus-visible:border-border-brand w-full justify-between text-left font-normal focus-visible:ring-1 focus-visible:ring-offset-0',
+                          !field.value && 'text-content-secondary',
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <CalendarIcon className="text-content-brand" size={20} />
+                          {field.value ? (
+                            format(field.value, 'dd/MM/yyyy')
+                          ) : (
+                            <span>select a date</span>
+                          )}
+                        </div>
+                        <ChevronDownIcon className="h-4 w-4 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < startOfToday()}
+                      />
+                    </PopoverContent>
+                  </Popover>
 
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
