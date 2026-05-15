@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
 import { IMaskInput } from 'react-imask'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { cn } from '@/lib/utils'
@@ -86,6 +87,15 @@ export const AppointmentForm = () => {
   const firstError = Object.values(form.formState.errors)[0]
 
   const onSubmit = (data: AppointmentFormValues) => {
+    const [hour, minute] = data.time.split(':')
+
+    const scheduleAt = data.scheduleAt
+    scheduleAt.setHours(Number(hour), Number(minute), 0, 0)
+
+    toast.success(`Scheduling created with success.`)
+
+    // call server action
+
     console.log(data)
   }
 
