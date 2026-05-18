@@ -11,6 +11,7 @@ import {
   PhoneIcon,
   UserIcon,
 } from 'lucide-react'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { IMaskInput } from 'react-imask'
 import { toast } from 'sonner'
@@ -73,6 +74,8 @@ const TIME_OPTIONS = generateTimeOptions({
 })
 
 export const AppointmentForm = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false)
+
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentFormSchema),
     defaultValues: {
@@ -101,11 +104,13 @@ export const AppointmentForm = () => {
     }
 
     toast.success(result.message)
+    setIsFormOpen(false)
+
     form.reset()
   }
 
   return (
-    <Dialog>
+    <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
       <DialogTrigger asChild>
         <Button variant="brand">New scheduling</Button>
       </DialogTrigger>

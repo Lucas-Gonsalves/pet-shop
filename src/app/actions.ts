@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import z from 'zod'
 
 import prisma from '@/lib/prisma'
@@ -43,6 +44,7 @@ export async function createAppointment(data: appointmentSchemaProps) {
 
     await prisma.appointment.create({ data: parcedData })
 
+    revalidatePath('/')
     return {
       success: true,
       message: 'Scheduling created with success.',
