@@ -18,7 +18,7 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Appointment } from '@/@types/appointments'
-import { createAppointment } from '@/app/actions'
+import { createAppointment, updateAppointment } from '@/app/actions'
 import { cn } from '@/lib/utils'
 import { generateTimeOptions } from '@/utils'
 
@@ -38,35 +38,42 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Textarea } from '../ui/textarea'
 
-const appointmentFormSchema = z
-  .object({
-    tutorName: z.string().min(3, 'Tutor name is required'),
-    petName: z.string().min(3, 'Pet name is required'),
-    phone: z.string().min(11, 'Phone is required'),
-    description: z.string().min(3, 'Description is required'),
-    scheduleAt: z
-      .date({
-        error: 'Date is required',
-      })
-      .min(startOfToday(), {
-        message: 'Date cannot be in pass',
-      }),
-    time: z.string().min(1, 'Hour is required'),
-  })
-  .refine(
-    (data) => {
-      const [hour, minute] = data.time.split(':')
-      const scheduleDateTime = setMinutes(setHours(data.scheduleAt, Number(hour)), Number(minute))
+const appointmentFormSchema = (isEdit: boolean) =>
+  z
+    .object({
+      tutorName: z.string().min(3, 'Tutor name is required'),
+      petName: z.string().min(3, 'Pet name is required'),
+      phone: z.string().min(11, 'Phone is required'),
+      description: z.string().min(3, 'Description is required'),
+      scheduleAt: z
+        .date({
+          error: 'Date is required',
+        })
+        .min(startOfToday(), {
+          message: 'Date cannot be in pass',
+        }),
+      time: z.string().min(1, 'Hour is required'),
+    })
+    .refine(
+      (data) => {
+        if (isEdit) return true
 
-      return scheduleDateTime > new Date()
-    },
-    {
-      path: ['time'],
-      error: 'Hour cannot be in pass',
-    },
-  )
+        const [hour, minute] = data.time.split(':')
 
-type AppointmentFormValues = z.infer<typeof appointmentFormSchema>
+        const scheduleDateTime = setMinutes(
+          setHours(new Date(data.scheduleAt), Number(hour)),
+          Number(minute),
+        )
+
+        return scheduleDateTime > new Date()
+      },
+      {
+        path: ['time'],
+        error: 'Hour cannot be in pass',
+      },
+    )
+
+type AppointmentFormValues = z.infer<ReturnType<typeof appointmentFormSchema>>
 
 type AppointmentFormProps = {
   children?: React.ReactNode
@@ -82,8 +89,10 @@ const TIME_OPTIONS = generateTimeOptions({
 export const AppointmentForm = ({ appointment, children }: AppointmentFormProps) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
 
+  const isEdit = !!appointment?.id
+
   const form = useForm<AppointmentFormValues>({
-    resolver: zodResolver(appointmentFormSchema),
+    resolver: zodResolver(appointmentFormSchema(isEdit)),
     defaultValues: {
       tutorName: '',
       petName: '',
@@ -102,7 +111,9 @@ export const AppointmentForm = ({ appointment, children }: AppointmentFormProps)
     const scheduleAt = data.scheduleAt
     scheduleAt.setHours(Number(hour), Number(minute), 0, 0)
 
-    const result = await createAppointment({ ...data, scheduleAt })
+    const result = !isEdit
+      ? await createAppointment({ ...data, scheduleAt })
+      : await updateAppointment(appointment.id, { ...data, scheduleAt })
 
     if (!result.success) {
       toast.error(result.message)
@@ -121,7 +132,9 @@ export const AppointmentForm = ({ appointment, children }: AppointmentFormProps)
 
   return (
     <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
+      <DialogTrigger asChild>
+        {children ?? <Button variant="brand">New scheduling</Button>}
+      </DialogTrigger>
 
       <DialogContent variant="appointment" overlayVariant="blurred" showCloseButton>
         <DialogHeader>
