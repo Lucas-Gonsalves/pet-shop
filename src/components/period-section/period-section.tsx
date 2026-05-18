@@ -38,7 +38,9 @@ export const PeriodSection = ({ period }: PeriodSection) => {
           </div>
         </div>
       ) : (
-        <p>None schedule for this period</p>
+        <p className="text-paragraph-small-size text-content-secondary p-5">
+          None schedule for this period
+        </p>
       )}
     </section>
   )

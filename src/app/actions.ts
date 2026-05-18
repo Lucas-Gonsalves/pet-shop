@@ -27,7 +27,8 @@ export async function createAppointment(data: appointmentSchemaProps) {
 
     if (!isMorning && !isAfternoon && !isEvening) {
       return {
-        error: 'Scheduling are only made between 9h and 12hm, 13h and 18h, 19h and 21h',
+        success: false,
+        message: 'Scheduling are only made between 9h and 12hm, 13h and 18h, 19h and 21h',
       }
     }
 
@@ -35,7 +36,8 @@ export async function createAppointment(data: appointmentSchemaProps) {
 
     if (existingAppointment) {
       return {
-        error: 'This time slot is already reserved.',
+        success: false,
+        message: 'This time slot is already reserved.',
       }
     }
 
@@ -43,8 +45,14 @@ export async function createAppointment(data: appointmentSchemaProps) {
 
     return {
       success: true,
+      message: 'Scheduling created with success.',
     }
   } catch (error) {
     console.error(error)
+
+    return {
+      success: false,
+      message: 'An error occurred while creating the appointment.',
+    }
   }
 }
