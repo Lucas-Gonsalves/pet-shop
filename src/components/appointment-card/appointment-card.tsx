@@ -1,5 +1,10 @@
+import { PenIcon } from 'lucide-react'
+
 import { Appointment } from '@/@types/appointments'
 import { cn } from '@/lib/utils'
+
+import { AppointmentForm } from '../appointment-form'
+import { Button } from '../ui/button'
 
 type AppointmentCardProps = {
   appointment: Appointment
@@ -35,6 +40,14 @@ export const AppointmentCard = ({ appointment, isFirstInSection }: AppointmentCa
         <span className="text-paragraph-small-size text-content-secondary">
           {appointment.description}
         </span>
+      </div>
+
+      <div className="col-span-2 mt-2 flex items-center justify-end gap-2 text-right md:col-span-1 md:mt-0">
+        <AppointmentForm appointment={appointment}>
+          <Button variant="edit" size="icon">
+            <PenIcon size={12} />
+          </Button>
+        </AppointmentForm>
       </div>
     </div>
   )

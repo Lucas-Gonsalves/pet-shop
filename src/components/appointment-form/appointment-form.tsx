@@ -11,12 +11,13 @@ import {
   PhoneIcon,
   UserIcon,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { IMaskInput } from 'react-imask'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { Appointment } from '@/@types/appointments'
 import { createAppointment } from '@/app/actions'
 import { cn } from '@/lib/utils'
 import { generateTimeOptions } from '@/utils'
@@ -67,13 +68,18 @@ const appointmentFormSchema = z
 
 type AppointmentFormValues = z.infer<typeof appointmentFormSchema>
 
+type AppointmentFormProps = {
+  children?: React.ReactNode
+  appointment?: Appointment
+}
+
 const TIME_OPTIONS = generateTimeOptions({
   shiftStart: 9,
   endShift: 21,
   timeSlots: 30,
 })
 
-export const AppointmentForm = () => {
+export const AppointmentForm = ({ appointment, children }: AppointmentFormProps) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
 
   const form = useForm<AppointmentFormValues>({
@@ -109,11 +115,13 @@ export const AppointmentForm = () => {
     form.reset()
   }
 
+  useEffect(() => {
+    form.reset(appointment)
+  }, [appointment, form])
+
   return (
     <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-      <DialogTrigger asChild>
-        <Button variant="brand">New scheduling</Button>
-      </DialogTrigger>
+      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
 
       <DialogContent variant="appointment" overlayVariant="blurred" showCloseButton>
         <DialogHeader>

@@ -1,5 +1,6 @@
 import { AppointmentForm } from '@/components/appointment-form'
 import { PeriodSection } from '@/components/period-section'
+import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { groupAppointmentByPeriod } from '@/utils'
 
@@ -27,7 +28,9 @@ export default async function Home() {
       </div>
 
       <div className="bg-background-tertiary fixed right-0 bottom-0 left-0 flex justify-center px-6 py-4.5 md:top-auto md:right-6 md:bottom-6 md:left-auto md:w-auto md:bg-transparent md:p-0">
-        <AppointmentForm />
+        <AppointmentForm>
+          <Button variant="brand">New scheduling</Button>
+        </AppointmentForm>
       </div>
     </div>
   )
