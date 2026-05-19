@@ -102,7 +102,40 @@ export async function updateAppointment(id: string, data: AppointmentDataSchemaP
 
     return {
       success: false,
-      message: 'An error occurred while creating the appointment.',
+      message: 'An error occurred while updating the appointment.',
+    }
+  }
+}
+
+export async function deleteAppointment(id: string) {
+  try {
+    const existingAppointment = await prisma.appointment.findFirst({
+      where: { id },
+    })
+
+    if (!existingAppointment) {
+      return {
+        success: false,
+        message: 'Appointment unavailable to delete.',
+      }
+    }
+
+    await prisma.appointment.delete({
+      where: { id },
+    })
+
+    revalidatePath('/')
+
+    return {
+      success: true,
+      message: 'Scheduling deleted with success.',
+    }
+  } catch (error) {
+    console.error(error)
+
+    return {
+      success: false,
+      message: 'An error occurred while deleting an appointment.',
     }
   }
 }

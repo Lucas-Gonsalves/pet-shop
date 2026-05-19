@@ -1,9 +1,25 @@
-import { PenIcon } from 'lucide-react'
+'use client'
+
+import { Loader2Icon, PenIcon, Trash2Icon } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 import { Appointment } from '@/@types/appointments'
+import { deleteAppointment } from '@/app/actions'
 import { cn } from '@/lib/utils'
 
 import { AppointmentForm } from '../appointment-form'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog'
 import { Button } from '../ui/button'
 
 type AppointmentCardProps = {
@@ -12,6 +28,25 @@ type AppointmentCardProps = {
 }
 
 export const AppointmentCard = ({ appointment, isFirstInSection }: AppointmentCardProps) => {
+  const [isDeleating, setIsDeleating] = useState(false)
+
+  const handleDelete = async () => {
+    setIsDeleating(true)
+
+    const result = await deleteAppointment(appointment.id)
+
+    if (!result.success) {
+      toast.error(result.message)
+      return
+    }
+
+    toast.success(result.message)
+
+    setIsDeleating(false)
+
+    return
+  }
+
   return (
     <div
       className={cn(
@@ -48,6 +83,28 @@ export const AppointmentCard = ({ appointment, isFirstInSection }: AppointmentCa
             <PenIcon size={12} />
           </Button>
         </AppointmentForm>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="remove" size="icon">
+              <Trash2Icon size={12} />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Remove appointment</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure that you wanna remove this appointment? This action {"can't"} be undo.
+              </AlertDialogDescription>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete} disabled={isDeleating}>
+                  {isDeleating && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
+                  Remove
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogHeader>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   )
