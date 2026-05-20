@@ -7,7 +7,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
 import { Button } from '../ui/button'
-import { Popover, PopoverTrigger } from '../ui/popover'
+import { Calendar } from '../ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 export const DatePicker = () => {
   const router = useRouter()
@@ -43,6 +44,11 @@ export const DatePicker = () => {
     updateURLWithDate(newDate)
   }
 
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    updateURLWithDate(selectedDate)
+    setIsPopoverOpen(false)
+  }
+
   return (
     <div className="flex items-center gap-2">
       <Button variant="outline" onClick={() => handleNavigateDay(-1)}>
@@ -57,12 +63,21 @@ export const DatePicker = () => {
           >
             <div className="flex items-center gap-2">
               <CalendarIcon className="text-content-brand h-4 w-4" />
-              {date && format(date, 'PPP', { locale: ptBR })}
+              {date && format(date, 'dd/MM/yyyy')}
               {!date && <span>Select a date</span>}
             </div>
             <ChevronDown className="h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={handleDateSelect}
+            autoFocus
+            locale={ptBR}
+          />
+        </PopoverContent>
       </Popover>
 
       <Button variant="outline" onClick={() => handleNavigateDay(1)}>
