@@ -342,7 +342,7 @@ export const AppointmentForm = ({ appointment, children }: AppointmentFormProps)
 
           <div className="flex items-center gap-2 pt-4">
             <Button variant="brand" disabled={form.formState.isSubmitting}>
-              Agendar
+              Schedule
               {form.formState.isSubmitting && <Loader2Icon className="h-4 w-4 animate-spin" />}
             </Button>
             {firstError && <FieldError errors={[firstError]} />}
