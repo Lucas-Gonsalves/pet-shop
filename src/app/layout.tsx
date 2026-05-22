@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Geist, Inter } from 'next/font/google'
 import { Toaster } from 'sonner'
 
+import { Header } from '@/components/header'
 import { cn } from '@/lib/utils'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
@@ -33,8 +34,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn('font-sans', geist.variable)}>
       <body className={`${inter.variable} ${interTight.variable} h-full antialiased`}>
-        {children}
-        <Toaster position="top-right" />
+        <Header />
+        <div className="mx-auto max-w-3xl">
+          <main className="mt-12 flex flex-1 flex-col">
+            {children}
+            <Toaster position="top-right" />
+          </main>
+        </div>
       </body>
     </html>
   )
